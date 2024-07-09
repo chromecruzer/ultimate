@@ -1,0 +1,10 @@
+
+[workspace]
+resolver = '2'
+members = [
+	'apps/rustapp',
+	'./my_rust_lib',
+]
+
+[profile.release]
+lto = true

@@ -1,0 +1,61 @@
+{
+  "name": "karn",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/karn/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/karn",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/karn/src/main.ts",
+        "tsConfig": "apps/karn/tsconfig.app.json",
+        "assets": ["apps/karn/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "generateLockfile": true,
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "karn:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "karn:build:development"
+        },
+        "production": {
+          "buildTarget": "karn:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/karn/Dockerfile . -t karn"
+    }
+  }
+}
